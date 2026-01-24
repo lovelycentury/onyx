@@ -4,6 +4,7 @@ import bunIcon from "~/assets/icons/bun.svg?raw";
 import npmIcon from "~/assets/icons/npm.svg?raw";
 import pnpmIcon from "~/assets/icons/pnpm.svg?raw";
 import yarnIcon from "~/assets/icons/yarn.svg?raw";
+import HighlightedCode from "./HighlightedCode.vue";
 
 type PackageManager = "pnpm" | "npm" | "yarn" | "bun";
 
@@ -33,6 +34,8 @@ const tabs = computed(() => {
 
 <template>
   <OnyxUnstableCodeTabs v-model="selectedTab">
-    <OnyxUnstableCodeTab v-for="tab in tabs" v-bind="tab" :key="tab.value" :label="tab.value" />
+    <OnyxUnstableCodeTab v-for="tab in tabs" v-bind="tab" :key="tab.value" :label="tab.value">
+      <HighlightedCode :code="tab.code" :language="tab.language" />
+    </OnyxUnstableCodeTab>
   </OnyxUnstableCodeTabs>
 </template>

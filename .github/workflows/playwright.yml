@@ -11,6 +11,9 @@ on:
         default: false
         description: Whether to update snapshots / screenshots
 
+permissions:
+  contents: read
+
 jobs:
   playwright:
     strategy:
@@ -24,10 +27,18 @@ jobs:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     name: Playwright shard
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_REMOTE_CACHE__TURBO_TOKEN }}
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0 # We need the git history for playwright to be able determine the changed files
 
@@ -54,7 +65,7 @@ jobs:
           rsync -R $(git ls-files --others --modified --exclude-standard) ./changed-screenshots/ || echo "no changed files found"
 
       - name: Upload screenshots artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: ${{ inputs.update-snapshots == true }}
         with:
           name: screenshots-${{ matrix.shard }}
@@ -64,7 +75,7 @@ jobs:
           retention-days: 1
 
       - name: Upload Reports
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: ${{ !cancelled() }}
         with:
           name: blob-report-${{ matrix.shard }}
@@ -79,13 +90,21 @@ jobs:
   playwright-result:
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     name: Collect Playwright result
     needs: playwright
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Merge Screenshots
-        uses: actions/upload-artifact/merge@v6
+        uses: actions/upload-artifact/merge@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: ${{ !cancelled() }}
         continue-on-error: true
         with:
@@ -94,16 +113,16 @@ jobs:
           retention-days: 14
 
       - name: Download reports
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         if: ${{ !cancelled() }}
         with:
           pattern: blob-report-*
           merge-multiple: true
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
           cache: pnpm
@@ -119,7 +138,7 @@ jobs:
       # A file server is necessary, otherwise not all features are supported.
       # E.g. use `python3 -m http.server` or `npx serve` to quick and easily start one.
       - name: Upload HTML report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: html-report--attempt-${{ github.run_attempt }}
           path: |

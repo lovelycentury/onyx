@@ -4,15 +4,24 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: read
+
 jobs:
   changeset-action:
     name: Run Changeset Action
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
-
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ssh-key: ${{ secrets.GH_PUSH_PROTECTED_KEY }}
           fetch-depth: 0
@@ -20,7 +29,7 @@ jobs:
       - uses: ./.github/templates/node-setup
 
       - name: Create Pull Request
-        uses: changesets/action@v1
+        uses: changesets/action@c48e67d110a68bc90ccf1098e9646092baacaa87 # v1.6.0
         with:
           publish: "exit 1" # Fail on publish - Should always only create a PR
           createGithubReleases: false

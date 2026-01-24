@@ -209,11 +209,8 @@ export * from "./components/OnyxSidebar/types.js";
 
 export { default as OnyxSkeleton } from "./components/OnyxSkeleton/OnyxSkeleton.vue";
 
-export { default as OnyxUnstableSlider } from "./components/OnyxSlider/OnyxSlider.vue";
+export { default as OnyxSlider } from "./components/OnyxSlider/OnyxSlider.vue";
 export * from "./components/OnyxSlider/types.js";
-
-export { default as OnyxUnstableSliderControl } from "./components/OnyxSliderControl/OnyxSliderControl.vue";
-export * from "./components/OnyxSliderControl/types.js";
 
 export { default as OnyxStepper } from "./components/OnyxStepper/OnyxStepper.vue";
 export * from "./components/OnyxStepper/types.js";
@@ -229,6 +226,12 @@ export * from "./components/OnyxTab/types.js";
 
 export { default as OnyxTable } from "./components/OnyxTable/OnyxTable.vue";
 export * from "./components/OnyxTable/types.js";
+
+export { default as OnyxUnstableTableOfContents } from "./components/OnyxTableOfContents/OnyxTableOfContents.vue";
+export * from "./components/OnyxTableOfContents/types.js";
+
+export { default as OnyxUnstableTableOfContentsItem } from "./components/OnyxTableOfContentsItem/OnyxTableOfContentsItem.vue";
+export * from "./components/OnyxTableOfContentsItem/types.js";
 
 export { default as OnyxTabs } from "./components/OnyxTabs/OnyxTabs.vue";
 export * from "./components/OnyxTabs/types.js";
@@ -247,6 +250,9 @@ export * from "./components/OnyxFileTypeIcon/types.js";
 
 export { default as OnyxFileUpload } from "./components/OnyxFileUpload/OnyxFileUpload.vue";
 export * from "./components/OnyxFileUpload/types.js";
+
+export { default as OnyxUnstableFilterBadge } from "./components/OnyxFilterBadge/OnyxFilterBadge.vue";
+export * from "./components/OnyxFilterBadge/types.js";
 
 export { default as OnyxFilterTag } from "./components/OnyxFilterTag/OnyxFilterTag.vue";
 export * from "./components/OnyxFilterTag/types.js";

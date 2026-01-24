@@ -6,6 +6,8 @@ updates:
   - package-ecosystem: npm
     directory: /
     versioning-strategy: increase
+    cooldown:
+      default-days: 2 # Wait two days after a new version release - This is in sync with the `pnpm-workspace.yaml` `minimumReleaseAge` config
     schedule:
       interval: daily
     groups:
@@ -26,10 +28,6 @@ updates:
       # keep this in sync with .node-version file, if we e.g. use node 20, we do not want to update the types to latest 22
       - dependency-name: "@types/node"
         update-types: [version-update:semver-major]
-
-      # TODO: remove when https://github.com/vuejs/repl/issues/269 is fixed
-      - dependency-name: "@vue/repl"
-        update-types: [version-update:semver-minor]
 
   - package-ecosystem: github-actions
     directory: /

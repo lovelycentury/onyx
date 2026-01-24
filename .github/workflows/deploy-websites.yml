@@ -15,6 +15,9 @@ on:
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_REMOTE_CACHE__TURBO_TOKEN }}
 
+permissions:
+  contents: read
+
 jobs:
   deploy_storybook:
     name: Deploy Storybook
@@ -22,7 +25,13 @@ jobs:
     if: ${{ (inputs.environment || inputs.environment) != '' }}
     environment: ${{ inputs.environment || inputs.environment }}
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: ./.github/templates/node-setup
 
@@ -48,7 +57,13 @@ jobs:
     if: ${{ (inputs.environment || inputs.environment) != '' }}
     environment: ${{ inputs.environment || inputs.environment }}
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: ./.github/templates/node-setup
 
@@ -78,7 +93,13 @@ jobs:
     if: ${{ (inputs.environment || inputs.environment) != '' }}
     environment: ${{ inputs.environment || inputs.environment }}
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: ./.github/templates/node-setup
 
@@ -104,8 +125,13 @@ jobs:
     if: ${{ (inputs.environment || inputs.environment) != '' }}
     environment: ${{ inputs.environment || inputs.environment }}
     steps:
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
       - name: 🪝 Invoke internal demo app webhook
-        uses: distributhor/workflow-webhook@v3
+        uses: distributhor/workflow-webhook@2381f0e9c7b6bf061fb1405bd0804b8706116369 # v3.0.8
         # since the webhook is an external dependency, we still want to continue deploying the public demo app
         # we just call it here already so the internal demo app deployment can run in parallel
         continue-on-error: true
@@ -114,7 +140,8 @@ jobs:
           webhook_url: ${{ secrets.AZURE_DEMO_APP_WEBHOOK_URL }}
           webhook_secret: ${{ secrets.AZURE_DEMO_APP_WEBHOOK_SECRET }}
 
-      - uses: actions/checkout@v6
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: ./.github/templates/node-setup
 
@@ -144,12 +171,24 @@ jobs:
     if: ${{ (inputs.environment || inputs.environment) != '' }}
     environment: ${{ inputs.environment || inputs.environment }}
     steps:
-      - uses: actions/checkout@v6
+      - name: "🛃 Harden the runner (Audit all outbound calls)"
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: "🛒 Checkout Repository"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: ./.github/templates/node-setup
 
       - name: 🛠️ Build Showcase
         run: pnpm build:all --filter=@sit-onyx/showcase
+        env:
+          # the Nuxt Studio env variables currently need to be provided during the build and can not be dynamically injected during runtime
+          # see: https://github.com/nuxt-content/nuxt-studio/issues/139#issuecomment-3749269074
+          # we also added these env variables to our global turbo.json so turborepo correctly passes the env variables to the build process
+          STUDIO_GITHUB_CLIENT_ID: ${{ secrets.NUXT_STUDIO_GITHUB_CLIENT_ID }}
+          STUDIO_GITHUB_CLIENT_SECRET: ${{ secrets.NUXT_STUDIO_GITHUB_CLIENT_SECRET }}
 
       - name: Copy .node-version file
         # Cloud Foundry requires a ".nvmrc" file for defining the node version to use

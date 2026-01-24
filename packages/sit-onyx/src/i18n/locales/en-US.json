@@ -42,7 +42,8 @@
         "revealFlyout": "List of hidden columns",
         "revealTrigger": "Show hidden columns",
         "menu": {
-          "hideButton": "Hide column"
+          "hideButton": "Hide column",
+          "lastColumnTooltip": "The last column cannot be hidden."
         }
       }
     },
@@ -193,8 +194,8 @@
     "ariaLabel": "Avatar of {fullName}"
   },
   "filterTag": {
-    "clickToAdd": "Add {label} filter",
-    "clickToRemove": "Remove {label} filter"
+    "clickToAdd": "Add filter \"{label}\"",
+    "clickToRemove": "Remove filter \"{label}\""
   },
   "languageSelect": {
     "label": "Language",
@@ -234,7 +235,8 @@
     "calendarWeek": "CW",
     "calendarWeekButtonLabel": "Select calendar week {weekNumber}",
     "previousMonthButton": "Previous month",
-    "nextMonthButton": "Next month"
+    "nextMonthButton": "Next month",
+    "monthYearPicker": "Month and year picker"
   },
   "flyoutMenu": {
     "moreActions": "More actions",
@@ -290,5 +292,8 @@
     "select": {
       "listLabel": "Select number of items per page"
     }
+  },
+  "tableOfContents": {
+    "label": "Table of contents"
   }
 }

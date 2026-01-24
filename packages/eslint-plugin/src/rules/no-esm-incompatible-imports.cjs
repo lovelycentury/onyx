@@ -8,7 +8,7 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
-/** @type {import("eslint-plugin-vue/lib/utils").RuleModule} */
+/** @type {import("eslint-plugin-vue/dist/utils/index.js").RuleModule} */
 module.exports = {
   meta: {
     type: "problem",
@@ -32,7 +32,7 @@ module.exports = {
      * @private
      */
     function checkNode(node) {
-      if (/.*\.d\.(\w+\.)?tsx?$/.test(context.filename)) {
+      if (/\.d\.(\w+\.)?tsx?$/.test(context.filename)) {
         // ignore definition files: example.d.ts, index.d.vue.ts, index.d.tsx etc.
         return;
       }

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { iconPlaceholder } from "@sit-onyx/icons";
+import { iconArrowSmallRight, iconPlaceholder } from "@sit-onyx/icons";
+import OnyxButton from "../OnyxButton/OnyxButton.vue";
 import OnyxGlobalSearchGroup from "../OnyxGlobalSearchGroup/OnyxGlobalSearchGroup.vue";
 import OnyxGlobalSearchOption from "../OnyxGlobalSearchOption/OnyxGlobalSearchOption.vue";
 import OnyxGlobalSearch from "./OnyxGlobalSearch.vue";
@@ -42,6 +43,16 @@ const props = withDefaults(
           :link="`#${group}-${option}`"
         />
       </OnyxGlobalSearchGroup>
+    </template>
+    <template #endOfList="{ getOptionProps }">
+      <OnyxButton
+        v-bind="getOptionProps('show-all')"
+        label="Show all results"
+        mode="plain"
+        class="show-all-button"
+        :icon="iconArrowSmallRight"
+        icon-position="right"
+      />
     </template>
   </OnyxGlobalSearch>
 </template>
